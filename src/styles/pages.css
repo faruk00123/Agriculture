@@ -1,6 +1,0 @@
-.catGroup__head > div { flex: 1; }
-.checkout__actions .btn, .pdp__buy .btn { flex: 1 1 auto; }
-@media (max-width: 560px) {
-  .checkout__actions, .pdp__buy { flex-direction: column; }
-  .checkout__actions .btn, .pdp__buy .btn, .pdp__add { width: 100%; }
-}
