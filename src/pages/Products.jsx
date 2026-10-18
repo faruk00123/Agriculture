@@ -109,7 +109,7 @@ export default function Products() {
       <section className="section section--tight">
         <div className="container catalog">
           {/* ── Toolbar ── */}
-          <div className="catalog__bar">
+          <div className="flex flex-wrap items-center gap-2 justify-between bg-white border border-border rounded-lg p-2 shadow-sm">
             <button
               type="button"
               className="btn btn--ghost btn--sm catalog__filterBtn"
@@ -150,7 +150,7 @@ export default function Products() {
             </div>
           )}
 
-          <div className="catalog__layout">
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4 mt-4">
             {/* ── Filters ── */}
             <aside
               id="filter-panel"
@@ -158,14 +158,14 @@ export default function Products() {
               aria-label="পণ্য ফিল্টার"
             >
               <form
-                className="filters__inner"
+                className="flex flex-col gap-3 p-4"
                 onSubmit={(e) => {
                   e.preventDefault()
                   const term = searchText.trim()
                   term ? setParam('q', term) : setParam('q', '')
                 }}
               >
-                <div className="filters__head">
+                <div className="flex justify-between items-center">
                   <h2>
                     <Icon name="filter" size={17} /> ফিল্টার
                   </h2>
@@ -176,7 +176,7 @@ export default function Products() {
                   )}
                 </div>
 
-                <div className="filter-group">
+                <div className="flex flex-col gap-1.5">
                   <label className="filter-label" htmlFor="f-search">
                     পণ্যের নাম
                   </label>
@@ -188,7 +188,7 @@ export default function Products() {
                       onChange={(e) => setSearchText(e.target.value)}
                       placeholder="যেমন: সার, স্প্রেয়ার…"
                     />
-                    <button type="submit" className="btn btn--green btn--sm">
+                    <button type="submit" className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-sm bg-green500 text-white hover:bg-green600 transition-colors">
                       খুঁজুন
                     </button>
                   </div>
@@ -318,7 +318,7 @@ export default function Products() {
             </aside>
 
             {/* ── Results ── */}
-            <div className="catalog__results">
+            <div className="flex flex-col gap-4">
               {list.length === 0 ? (
                 <EmptyState
                   icon="search"
