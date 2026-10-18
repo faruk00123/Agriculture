@@ -116,16 +116,16 @@ export default function ProductDetails() {
           </div>
 
           {/* ── Summary ── */}
-          <div className="pdp__info">
-            <div className="pdp__badges">
+          <div className="flex flex-col gap-3 bg-white border border-border rounded-xl p-4 md:p-5 shadow-sm">
+            <div className="flex flex-wrap gap-1.5">
               <span className="chip chip--mint">{sub?.titleBn}</span>
               <span className="chip">{product.brand}</span>
               <DemoBadge small />
             </div>
 
-            <h1 className="pdp__title">{product.name}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold">{product.name}</h1>
 
-            <div className="pdp__ratingRow">
+            <div className="flex justify-between items-center flex-wrap gap-2">
               <span className="stars" title={`ডেমো রেটিং ${product.rating}`}>
                 {[1, 2, 3, 4, 5].map((n) => (
                   <Icon
@@ -142,19 +142,19 @@ export default function ProductDetails() {
               <StockChip stock={product.stock} />
             </div>
 
-            <div className="pdp__priceBox">
+            <div className="flex items-baseline gap-3">
               <div className="price price--lg">
                 <strong>{formatPrice(product.price)}</strong>
                 {product.oldPrice && <del>{formatPrice(product.oldPrice)}</del>}
               </div>
               {product.oldPrice && (
-                <span className="pdp__save">
+                <span className="text-green600 font-extrabold">
                   ডেমো সাশ্রয় {formatPrice(product.oldPrice - product.price)}
                 </span>
               )}
             </div>
 
-            <dl className="pdp__quick">
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
                 <dt>ব্র্যান্ড</dt>
                 <dd>{product.brand}</dd>
@@ -175,11 +175,11 @@ export default function ProductDetails() {
 
             <p className="pdp__short">{product.short}</p>
 
-            <div className="pdp__buy">
+            <div className="flex flex-wrap gap-2 items-center">
               <QtyStepper value={qty} onChange={setQty} />
               <button
                 type="button"
-                className="btn btn--orange btn--lg pdp__add"
+                className="flex-1 min-w-[220px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold bg-gradient-to-b from-orange to-orange2 text-[#1F2937] shadow-sm hover:brightness-[1.02] hover:shadow-md transition-all active:translate-y-px"
                 onClick={addToCart}
                 disabled={out}
               >
@@ -226,7 +226,7 @@ export default function ProductDetails() {
       {/* ── Description ── */}
       <section className="section section--tight">
         <div className="container pdp__details">
-          <div className="pdp__desc">
+          <div className="flex flex-col gap-4 bg-white border border-border rounded-xl p-4 md:p-5 shadow-sm">
             <h2>পণ্যের বর্ণনা</h2>
             <p>{product.description}</p>
             <p>
@@ -246,7 +246,7 @@ export default function ProductDetails() {
             <p>{product.short}</p>
           </div>
 
-          <aside className="pdp__side">
+          <aside className="flex flex-col gap-3 bg-white border border-border rounded-xl p-4 md:p-5 shadow-sm h-fit">
             <h2>পণ্য তথ্য</h2>
             <table className="infoTable">
               <tbody>
