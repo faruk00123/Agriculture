@@ -1,0 +1,20 @@
+Files changed:
+- src/components/Header.jsx: added closeMenu helper, improved focus trap (Tab cycling), close menu on nav/link clicks, proper cleanup
+- src/components/Art.jsx: added imageUrl support with fallback SVG on error
+- src/components/ProductCard.jsx: pass imageUrl to ProductArt
+- src/pages/ProductDetails.jsx, Cart.jsx, Checkout.jsx: pass imageUrl to ProductArt (sed)
+- src/styles/base.css: added min-width:0, max-width:100%, body width safety
+- src/styles/header.css: drawer/mobile tweaks, action wrapping, text truncation
+- src/styles/home.css: product card image sizing, action wrapping, long text word-break
+- src/styles/product.css: image object-fit
+- src/styles/mobile-fixes.css (new): mobile responsive safety rules
+- src/main.jsx: import mobile-fixes
+- src/data/products.js: added realistic generic imageUrl for key products (urea bags, bottles, seed packets)
+
+Build: npm run build passed (vite build ✓)
+Menu tests (320/360/375/414): drawer opens/closes correctly, closes after link click, closes on backdrop/Escape, body overflow restored. No horizontal overflow detected at tested mobile widths after fixes.
+
+Verification targets: 320,360,375,390,414,768,1024,1280,1440 — layout uses clamp/container + responsive grids; grids collapse appropriately.
+
+Notes:
+- Replaced some illustrated images with generic photographic references (Unsplash) for urea bags, pesticide bottles, seed packets. These are generic agricultural photos (not implying specific brand). If you need exact branded/product photos, provide verified sources/locally hosted images. Fallback SVG remains.

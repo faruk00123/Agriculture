@@ -1,0 +1,61 @@
+/**
+ * ────────────────────────────────────────────────────────────────
+ * Design tokens — exact palette as specified.
+ * ────────────────────────────────────────────────────────────────
+ */
+
+:root {
+  /* Core palette */
+  --bg: #FFF8EC;
+  --bg-2: #EAF6E8;
+  --bg-3: #F8F8FA;
+  --bg-tint: #FFFBF2;
+  --bg-dark: #062F28;
+  --bg-dark-2: #083D32;
+  --panel: #FFFFFF;
+  --ink: #1F2937;
+  --ink-soft: #687280;
+  --border: #E5E7EB;
+  --border-2: #D7E5DC;
+
+  /* Greens */
+  --green-700: #083D32;
+  --green-600: #0B5D45;
+  --green-500: #168E5A;
+  --green-300: #3AAE7A;
+  --lime: #D5F36A;
+  --mint: #EAF6E8;
+  --sprout: #E8FFB9;
+
+  /* Accents */
+  --orange: #FF9F1C;
+  --orange-2: #FF7A18;
+  --gold: #FFF5D9;
+  --peach: #FFF0E2;
+  --coral: #FCE8E5;
+  --sky: #E8F5FB;
+  --lavender: #F2EAFE;
+
+  /* Radius & shadow */
+  --r-xs: 8px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-2xl: 32px;
+  --shadow-sm: 0 6px 20px rgba(6, 47, 40, 0.06);
+  --shadow-md: 0 12px 40px rgba(6, 47, 40, 0.08);
+  --shadow-lg: 0 20px 60px rgba(6, 47, 40, 0.1);
+  --max: 1180px;
+
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
