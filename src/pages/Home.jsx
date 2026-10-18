@@ -34,10 +34,10 @@ export default function Home() {
   return (
     <>
       {/* ═════════ 1. Hero ═════════ */}
-      <section className="hero">
-        <div className="container hero__grid">
+      <section className="bg-gradient-to-b from-[#0D6C4E] to-green700 text-[#FFF8EC] py-12 md:py-14">
+        <div className="max-w-max mx-auto px-4 md:px-5 grid lg:grid-cols-[1.2fr_1fr] gap-6 items-center">
           <div className="hero__content">
-            <span className="kicker kicker--lime">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-sm font-bold bg-lime text-green700 mb-3">
               <Icon name="sprout" size={15} /> {brand.nameBn} · {brand.name}
             </span>
             <h1>
@@ -45,21 +45,21 @@ export default function Home() {
               <br />
               <em>ফসলের সুরক্ষায়</em>
             </h1>
-            <p className="hero__lead">
+            <p className="text-[#FFF8EC]/80 mt-2 mb-4 max-w-[660px]">
               কীটনাশক, ছত্রাকনাশক, আগাছানাশক, রাসায়নিক ও জৈব সার, মাইক্রোনিউট্রিয়েন্ট, বীজ, স্প্রেয়ার ও
               সেচের উপকরণ — সবকিছু এক জায়গায় দেখুন। এটি একটি ফ্রন্টএন্ড ডেমো ওয়েবসাইট।
             </p>
 
-            <div className="hero__cta">
-              <Link to="/products" className="btn btn--orange btn--lg">
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Link to="/products" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold bg-gradient-to-b from-orange to-orange2 text-[#1F2937] shadow-sm hover:brightness-[1.02] hover:shadow-md transition-all active:translate-y-px">
                 <Icon name="cart" size={19} /> পণ্য দেখুন
               </Link>
-              <Link to="/categories" className="btn btn--outline btn--lg">
+              <Link to="/categories" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold bg-transparent text-[#FFF8EC] border-2 border-[rgba(255,248,236,0.4)] hover:brightness-105 transition-colors">
                 <Icon name="grid" size={18} /> ক্যাটাগরি দেখুন
               </Link>
             </div>
 
-            <form className="hero__search" onSubmit={submitSearch} role="search">
+            <form className="flex items-center gap-2 bg-white/15 border border-[rgba(255,248,236,.24)] px-2 py-1.5 rounded-full max-w-[560px]" onSubmit={submitSearch} role="search">
               <Icon name="search" size={19} />
               <input
                 type="search"
@@ -68,12 +68,12 @@ export default function Home() {
                 placeholder="যেমন: কীটনাশক, সার, ধানের বীজ…"
                 aria-label="হোমপেজ পণ্য অনুসন্ধান"
               />
-              <button type="submit" className="btn btn--green">
+              <button type="submit" className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full font-bold bg-green500 text-white hover:bg-green600 transition-colors">
                 অনুসন্ধান
               </button>
             </form>
 
-            <ul className="hero__chips">
+            <ul className="flex flex-wrap gap-2 mt-4">
               <li>
                 <Icon name="shield" size={16} /> নিরাপদ ব্রাউজিং
               </li>
@@ -106,7 +106,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="container">
+        <div className="max-w-max mx-auto px-4 md:px-5">
           <ul className="hero__stats">
             {stats.map((s) => (
               <li key={s.label}>
@@ -119,19 +119,19 @@ export default function Home() {
       </section>
 
       {/* ═════════ 2. Categories ═════════ */}
-      <section className="section">
+      <section className="py-16 md:py-20">
         <div className="container">
           <SectionHeading
             kicker="ক্যাটাগরি"
             title="পণ্য ক্যাটাগরি অনুযায়ী দেখুন"
             desc="চারটি প্রধান গ্রুপ ও ১৯টি সাব-ক্যাটাগরি — সবই ডেমো ডেটা দিয়ে পূর্ণ।"
             action={
-              <Link to="/categories" className="btn btn--ghost btn--sm">
+              <Link to="/categories" className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-sm bg-[#1f29370f] text-ink hover:bg-[#1f29371a] transition-colors">
                 সব ক্যাটাগরি <Icon name="arrowRight" size={16} />
               </Link>
             }
           />
-          <div className="cat-grid">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
             {mainCategories.map((c) => (
               <Link key={c.slug} to={`/products?cat=${c.slug}`} className={`cat-card tone-${c.tone}`}>
                 <span className="cat-card__ico">
@@ -162,7 +162,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ 3. Featured ═════════ */}
-      <section className="section section--tint">
+      <section className="py-16 md:py-20 bg-bg-tint">
         <div className="container">
           <SectionHeading
             kicker="নির্বাচিত"
@@ -174,7 +174,7 @@ export default function Home() {
               </Link>
             }
           />
-          <div className="pgrid">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
             {featured.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -183,7 +183,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ 4. Popular ═════════ */}
-      <section className="section">
+      <section className="py-16 md:py-20">
         <div className="container">
           <SectionHeading
             kicker="চাহিদা অনুযায়ী"
@@ -204,7 +204,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ 5. New arrivals ═════════ */}
-      <section className="section section--mint">
+      <section className="py-16 md:py-20 bg-bg2">
         <div className="container">
           <SectionHeading
             kicker="নতুন যোগ"
@@ -225,7 +225,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ 6. Shop by crop ═════════ */}
-      <section className="section">
+      <section className="py-16 md:py-20">
         <div className="container">
           <SectionHeading
             kicker="ফসল অনুযায়ী"
@@ -249,7 +249,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ 7. Shop by problem ═════════ */}
-      <section className="section section--tint">
+      <section className="py-16 md:py-20 bg-bg-tint">
         <div className="container">
           <SectionHeading
             kicker="সমস্যা অনুযায়ী"
@@ -275,7 +275,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ 8. Promo banner ═════════ */}
-      <section className="section">
+      <section className="py-16 md:py-20">
         <div className="container">
           <div className="promo">
             <div className="promo__left">
@@ -318,7 +318,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ 9. Knowledge articles ═════════ */}
-      <section className="section section--tint">
+      <section className="py-16 md:py-20 bg-bg-tint">
         <div className="container">
           <SectionHeading
             kicker="কৃষিপরামর্শ"
@@ -356,7 +356,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ 10. Customer service ═════════ */}
-      <section className="section">
+      <section className="py-16 md:py-20">
         <div className="container">
           <SectionHeading kicker="গ্রাহক সেবা" title="কেনা-বেচা সহজ ও স্বচ্ছ" desc="সেবার বৈশিষ্ট্য ও সরাসরি যোগাযোগের উপায়।" />
           <div className="svc-grid">
@@ -401,7 +401,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ 11. About the business ═════════ */}
-      <section className="section section--dark">
+      <section className="py-16 md:py-20 bg-gradient-to-b from-[#0b5d45] to-[#062f28] text-[#FFF8EC]">
         <div className="container about-band">
           <div className="about-band__text">
             <span className="kicker kicker--lime">
@@ -427,7 +427,7 @@ export default function Home() {
               <Link to="/about" className="btn btn--lime">
                 আমাদের সম্পর্কে জানুন
               </Link>
-              <Link to="/contact" className="btn btn--outline btn--onDark">
+              <Link to="/contact" className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full font-bold bg-transparent text-[#FFF8EC] border-2 border-[rgba(255,248,236,0.4)]">
                 যোগাযোগ
               </Link>
             </div>
@@ -456,7 +456,7 @@ export default function Home() {
       </section>
 
       {/* ═════════ Safety note ═════════ */}
-      <section className="section section--tight">
+      <section className="py-6 md:py-10">
         <div className="container">
           <Note tone="harvest" icon="alert">
             <strong>গুরুত্বপূর্ণ:</strong> {brand.nameBn} কোনো পণ্যের মাত্রা, প্রয়োগবিধি, নিরাপত্তা বিরতি বা

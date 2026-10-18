@@ -103,12 +103,12 @@ export default function Header() {
   return (
     <>
 
-      <header className={`header${scrolled ? ' header--stuck' : ''}`}>
-        <div className="container header__top">
+      <header className={`sticky top-0 z-[900] backdrop-blur-[6px] ${scrolled ? 'shadow-[0_6px_30px_rgba(6,47,40,.18)]' : ''}`}>
+        <div className="max-w-max mx-auto px-4 md:px-5 grid grid-cols-[auto_1fr_auto] gap-4 items-center bg-gradient-to-b from-green700 to-green600 text-[#FFF8EC] py-2 border-b border-[rgba(255,248,236,.14)]">
           <button
             ref={burgerRef}
             type="button"
-            className="icon-btn header__burger"
+            className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white hover:bg-white/20 transition-colors md:hidden"
             aria-label={menuOpen ? 'মেনু বন্ধ করুন' : 'মেনু খুলুন'}
             aria-expanded={menuOpen}
             aria-controls="mobile-drawer"
@@ -121,7 +121,7 @@ export default function Header() {
 
           <button
             type="button"
-            className="header__search"
+            className="hidden lg:inline-flex items-center gap-2 bg-white/15 border border-[rgba(255,248,236,.24)] px-3 py-2 rounded-full text-[#FFF8EC] text-sm"
             onClick={() => setSearchOpen(true)}
             aria-label="পণ্য অনুসন্ধান খুলুন"
           >
@@ -129,26 +129,26 @@ export default function Header() {
             <span>পণ্য খুঁজুন…</span>
           </button>
 
-          <div className="header__actions">
+          <div className="flex items-center gap-1.5 min-w-0 flex-nowrap">
             <button
               type="button"
-              className="icon-btn header__searchBtn"
+              className="inline-flex lg:hidden items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white hover:bg-white/20 transition-colors"
               onClick={() => setSearchOpen(true)}
               aria-label="অনুসন্ধান"
             >
               <Icon name="search" size={21} />
             </button>
 
-            <Link to="/wishlist" className="icon-btn header__wish" aria-label={`উইশলিস্ট (${wishlistCount}টি পণ্য)`}>
+            <Link to="/wishlist" className="relative inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white hover:bg-white/20 transition-colors" aria-label={`উইশলিস্ট (${wishlistCount}টি পণ্য)`}>
               <Icon name="heart" size={21} />
               {wishlistCount > 0 && <span className="badge badge--lime">{wishlistCount}</span>}
             </Link>
 
-            <Link to="/cart" className="cart-btn" aria-label={`কার্ট (${cartCount}টি পণ্য)`}>
+            <Link to="/cart" className="relative inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-gradient-to-b from-orange to-orange2 text-[#1F2937] font-extrabold min-w-0" aria-label={`কার্ট (${cartCount}টি পণ্য)`}>
               <Icon name="cart" size={22} />
-              <span className="cart-btn__text">
-                <small>কার্ট</small>
-                <strong>{cartCount} টি</strong>
+              <span className="flex flex-col leading-none text-left min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+                <small className="text-[.8rem] font-bold">কার্ট</small>
+                <strong className="text-[.95rem]">{cartCount} টি</strong>
               </span>
               {cartCount > 0 && <span className="badge badge--orange">{cartCount}</span>}
             </Link>
@@ -156,9 +156,9 @@ export default function Header() {
         </div>
 
         {/* ── Primary navigation ── */}
-        <nav className="nav" aria-label="প্রধান নেভিগেশন">
-          <div className="container nav__inner">
-            <ul className="nav__list">
+        <nav className="bg-green700 text-[#FFF8EC] border-b border-[rgba(255,248,236,.12)] py-4" aria-label="প্রধান নেভিগেশন">
+          <div className="max-w-max mx-auto px-4 md:px-5 flex items-center justify-between gap-4 py-1">
+            <ul className="hidden lg:flex gap-1 flex-wrap">
               {PRIMARY_NAV.map((item) => (
                 <li key={item.to}>
                   <NavLink
@@ -168,7 +168,7 @@ export default function Header() {
                       const active = item.to.includes('?')
                         ? location.search.includes(item.to.split('?')[1])
                         : isActive
-                      return `nav__link${active ? ' is-active' : ''}`
+                      return `inline-flex items-center gap-1 px-2 py-1 rounded-full font-bold opacity-90 hover:opacity-100 hover:bg-white/10 transition-colors ${active ? 'bg-[rgba(213,243,106,0.16)] text-lime opacity-100' : ''}`
                     }}
                   >
                     {item.label}
@@ -176,7 +176,7 @@ export default function Header() {
                 </li>
               ))}
             </ul>
-            <div className="nav__owner">
+            <div className="hidden lg:flex items-center gap-1.5 opacity-90 text-[0.98rem]">
               <Icon name="user" size={15} />
               <span>{brand.ownerLabelBn}</span>
             </div>
@@ -185,10 +185,10 @@ export default function Header() {
       </header>
 
       {/* ── Mobile drawer ── */}
-      <div className={`drawer${menuOpen ? ' is-open' : ''}`} id="mobile-drawer" aria-hidden={!menuOpen}>
-        <div className="drawer__backdrop" onClick={closeMenu} />
-        <aside className="drawer__panel" ref={drawerRef} role="dialog" aria-modal="true" aria-label="মেনু">
-          <div className="drawer__head">
+      <div className={`fixed inset-0 z-[950] pointer-events-none max-w-full ${menuOpen ? 'pointer-events-auto' : ''}`} id="mobile-drawer" aria-hidden={!menuOpen}>
+        <div className={`absolute inset-0 bg-[rgba(6,47,40,0.4)] transition-opacity duration-200 ease-out ${menuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={closeMenu} />
+        <aside className={`absolute top-0 bottom-0 left-0 w-[min(86vw,360px)] max-w-full bg-gradient-to-b from-green700 to-[#05251F] text-[#FFF8EC] flex flex-col transition-transform duration-[250ms] ease-out overflow-y-auto overscroll-contain ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`} ref={drawerRef} role="dialog" aria-modal="true" aria-label="মেনু">
+          <div className="flex items-center justify-between px-3 py-2.5">
             <Logo variant="dark" size={40} />
             <button type="button" className="icon-btn" onClick={closeMenu} aria-label="মেনু বন্ধ করুন">
               <Icon name="close" size={22} />
@@ -197,7 +197,7 @@ export default function Header() {
 
           <button
             type="button"
-            className="drawer__search"
+            className="mx-3 mb-2 flex items-center gap-2 px-3 py-2 rounded-full bg-white/15 border border-[rgba(255,248,236,.24)]"
             onClick={() => {
               closeMenu()
               setSearchOpen(true)
@@ -206,9 +206,9 @@ export default function Header() {
             <Icon name="search" size={18} /> পণ্য খুঁজুন…
           </button>
 
-          <div className="drawer__body">
+          <div className="flex-1 overflow-auto px-3 flex flex-col gap-4">
             {DRAWER_GROUPS.map((group) => (
-              <div className="drawer__group" key={group.title}>
+              <div className="flex flex-col gap-2" key={group.title}>
                 <h3>{group.title}</h3>
                 <ul>
                   {group.links.map((l) => (
@@ -216,7 +216,7 @@ export default function Header() {
                       <NavLink
                         to={l.to}
                         end={l.end}
-                        className={({ isActive }) => `drawer__link${isActive ? ' is-active' : ''}`}
+                        className={({ isActive }) => `flex items-center justify-between px-2 py-2 rounded-md ${isActive ? 'bg-[rgba(213,243,106,0.16)] text-lime' : ''}`}
                         onClick={closeMenu}
                       >
                         {l.label}
@@ -232,7 +232,7 @@ export default function Header() {
               <h3>অতিরিক্ত</h3>
               <ul>
                 <li>
-                  <NavLink to="/faq" className="drawer__link" onClick={closeMenu}>
+                  <NavLink to="/faq" className="flex items-center justify-between px-2 py-2 rounded-md" onClick={closeMenu}>
                     সাধারণ জিজ্ঞাসা <Icon name="chevronRight" size={16} />
                   </NavLink>
                 </li>
@@ -250,7 +250,7 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="drawer__foot">
+          <div className="p-3 flex flex-col gap-1.5 opacity-90">
             <a href={contactLinks.tel} onClick={closeMenu}>
               <Icon name="phone" size={16} /> {brand.phoneDisplay}
             </a>
