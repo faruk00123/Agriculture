@@ -6,6 +6,9 @@ import Icon from './Icon'
 import Logo from './Logo'
 import SearchOverlay from './SearchOverlay'
 
+/* The three trailing links only fit from the large-laptop breakpoint up;
+   below that they live in the drawer (and the tablet strip covers the
+   shopping links). */
 const PRIMARY_NAV = [
   { to: '/', label: 'হোম', end: true },
   { to: '/products', label: 'সকল পণ্য' },
@@ -14,22 +17,28 @@ const PRIMARY_NAV = [
   { to: '/products?cat=fertilizers', label: 'সার' },
   { to: '/products?cat=seeds', label: 'বীজ' },
   { to: '/products?cat=accessories', label: 'কৃষি সহায়ক' },
-  { to: '/advice', label: 'কৃষিপরামর্শ' },
-  { to: '/about', label: 'আমাদের সম্পর্কে' },
-  { to: '/contact', label: 'যোগাযোগ' },
+  { to: '/advice', label: 'কৃষিপরামর্শ', wide: true },
+  { to: '/about', label: 'আমাদের সম্পর্কে', wide: true },
+  { to: '/contact', label: 'যোগাযোগ', wide: true },
 ]
+
+/* Tablet (768–1023px): a compact, horizontally scrollable link strip
+   instead of squeezing the desktop navbar into a narrow screen. */
+const TABLET_NAV = PRIMARY_NAV.slice(0, 7)
 
 const DRAWER_GROUPS = [
   { title: 'প্রধান', links: PRIMARY_NAV.slice(0, 3) },
-  {
-    title: 'কেনাকাটা',
-    links: PRIMARY_NAV.slice(3, 7),
-  },
-  {
-    title: 'জানুন',
-    links: PRIMARY_NAV.slice(7),
-  },
+  { title: 'কেনাকাটা', links: PRIMARY_NAV.slice(3, 7) },
+  { title: 'জানুন', links: PRIMARY_NAV.slice(7) },
 ]
+
+const navLinkClass = (isActive) =>
+  [
+    'inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 font-bold transition-colors',
+    isActive
+      ? 'bg-lime/15 text-lime'
+      : 'text-[#FFF8EC]/90 hover:bg-white/10 hover:text-[#FFF8EC]',
+  ].join(' ')
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -42,10 +51,8 @@ export default function Header() {
 
   const closeMenu = () => {
     setMenuOpen(false)
-    try {
-      document.body.classList.remove('menu-open')
-      document.body.style.overflow = ''
-    } catch (e) {}
+    document.body.classList.remove('menu-open')
+    document.body.style.overflow = ''
   }
 
   /* close overlays whenever navigation happens */
@@ -61,11 +68,13 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  /* body scroll lock + escape for the mobile drawer */
+  /* body scroll lock + focus trap + Escape for the drawer */
   useEffect(() => {
     if (!menuOpen) return
     const prev = document.body.style.overflow
     document.body.classList.add('menu-open')
+    document.body.style.overflow = 'hidden'
+
     const onKey = (e) => {
       if (e.key === 'Escape') {
         closeMenu()
@@ -87,8 +96,7 @@ export default function Header() {
     }
     window.addEventListener('keydown', onKey)
     const t = setTimeout(() => {
-      const focusable = drawerRef.current?.querySelectorAll('a, button')
-      focusable?.[0]?.focus()
+      drawerRef.current?.querySelectorAll('a, button')?.[0]?.focus()
     }, 60)
     return () => {
       document.body.classList.remove('menu-open')
@@ -98,85 +106,127 @@ export default function Header() {
     }
   }, [menuOpen])
 
-  const navLinkClass = ({ isActive }) => `nav__link${isActive ? ' is-active' : ''}`
+  const isActive = (item) => {
+    const [path, query] = item.to.split('?')
+    const pathOk = location.pathname === path || (!item.end && location.pathname.startsWith(`${path}/`))
+    if (!pathOk) return false
+    if (item.end) return location.pathname === path
+    if (!query) return !location.search
+    const have = new URLSearchParams(location.search)
+    for (const [k, v] of new URLSearchParams(query)) if (have.get(k) !== v) return false
+    return true
+  }
 
   return (
     <>
-
-      <header className={`sticky top-0 z-[900] backdrop-blur-[6px] ${scrolled ? 'shadow-[0_6px_30px_rgba(6,47,40,.18)]' : ''}`}>
-        <div className="max-w-max mx-auto px-4 md:px-5 grid grid-cols-[auto_1fr_auto] gap-4 items-center bg-gradient-to-b from-green700 to-green600 text-[#FFF8EC] py-2 border-b border-[rgba(255,248,236,.14)]">
-          <button
-            ref={burgerRef}
-            type="button"
-            className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white hover:bg-white/20 transition-colors md:hidden"
-            aria-label={menuOpen ? 'মেনু বন্ধ করুন' : 'মেনু খুলুন'}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-drawer"
-            onClick={() => setMenuOpen((v) => !v)}
-          >
-            <Icon name={menuOpen ? 'close' : 'menu'} size={24} />
-          </button>
-
-          <Logo variant="dark" size={44} className="header__logo" />
-
-          <button
-            type="button"
-            className="hidden lg:inline-flex items-center gap-2 bg-white/15 border border-[rgba(255,248,236,.24)] px-3 py-2 rounded-full text-[#FFF8EC] text-sm"
-            onClick={() => setSearchOpen(true)}
-            aria-label="পণ্য অনুসন্ধান খুলুন"
-          >
-            <Icon name="search" size={18} />
-            <span>পণ্য খুঁজুন…</span>
-          </button>
-
-          <div className="flex items-center gap-1.5 min-w-0 flex-nowrap">
+      <header
+        className={`sticky top-0 z-[900] bg-gradient-to-b from-green700 to-green600 text-[#FFF8EC] ${
+          scrolled ? 'shadow-[0_6px_30px_rgba(6,47,40,.18)]' : ''
+        }`}
+      >
+        {/* ── Top bar: menu · logo · search · actions ── */}
+        <div className="border-b border-[#FFF8EC]/15">
+          <div className="container flex items-center gap-2 py-2 sm:gap-3 sm:py-2.5">
             <button
+              ref={burgerRef}
+              data-audit="burger"
               type="button"
-              className="inline-flex lg:hidden items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white hover:bg-white/20 transition-colors"
-              onClick={() => setSearchOpen(true)}
-              aria-label="অনুসন্ধান"
+              className="icon-btn lg:hidden"
+              aria-label={menuOpen ? 'মেনু বন্ধ করুন' : 'মেনু খুলুন'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-drawer"
+              onClick={() => setMenuOpen((v) => !v)}
             >
-              <Icon name="search" size={21} />
+              <Icon name={menuOpen ? 'close' : 'menu'} size={22} />
             </button>
 
-            <Link to="/wishlist" className="relative inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/15 text-white hover:bg-white/20 transition-colors" aria-label={`উইশলিস্ট (${wishlistCount}টি পণ্য)`}>
-              <Icon name="heart" size={21} />
-              {wishlistCount > 0 && <span className="badge badge--lime">{wishlistCount}</span>}
-            </Link>
+            <Logo variant="dark" size={40} className="mr-auto" englishClass="hidden xs:block" />
 
-            <Link to="/cart" className="relative inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-gradient-to-b from-orange to-orange2 text-[#1F2937] font-extrabold min-w-0" aria-label={`কার্ট (${cartCount}টি পণ্য)`}>
-              <Icon name="cart" size={22} />
-              <span className="flex flex-col leading-none text-left min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                <small className="text-[.8rem] font-bold">কার্ট</small>
-                <strong className="text-[.95rem]">{cartCount} টি</strong>
-              </span>
-              {cartCount > 0 && <span className="badge badge--orange">{cartCount}</span>}
-            </Link>
+            <button
+              type="button"
+              className="hidden min-w-0 max-w-md flex-1 items-center gap-2 rounded-full border border-[#FFF8EC]/25 bg-white/10 px-3.5 py-2 text-left text-sm text-[#FFF8EC] transition-colors hover:bg-white/20 lg:flex"
+              onClick={() => setSearchOpen(true)}
+              aria-label="পণ্য অনুসন্ধান খুলুন"
+            >
+              <Icon name="search" size={18} />
+              <span className="truncate">পণ্য, ব্র্যান্ড বা ক্যাটাগরি খুঁজুন…</span>
+            </button>
+
+            <div className="flex shrink-0 items-center gap-1.5">
+              <a
+                href={contactLinks.tel}
+                className="hidden items-center gap-1.5 rounded-full px-2.5 py-1.5 text-sm font-semibold text-[#FFF8EC]/90 transition-colors hover:bg-white/10 hover:text-[#FFF8EC] xl:flex"
+              >
+                <Icon name="phone" size={16} />
+                {brand.phoneDisplay}
+              </a>
+
+              <button
+                type="button"
+                className="icon-btn lg:hidden"
+                onClick={() => setSearchOpen(true)}
+                aria-label="অনুসন্ধান"
+              >
+                <Icon name="search" size={20} />
+              </button>
+
+              <Link to="/wishlist" className="icon-btn relative" aria-label={`উইশলিস্ট (${wishlistCount}টি পণ্য)`}>
+                <Icon name="heart" size={20} />
+                {wishlistCount > 0 && <span className="badge badge--lime">{wishlistCount}</span>}
+              </Link>
+
+              <Link
+                to="/cart"
+                className="relative inline-flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-b from-orange to-orange2 px-2.5 py-1.5 font-extrabold text-ink shadow-sm transition hover:shadow-md"
+                aria-label={`কার্ট (${cartCount}টি পণ্য)`}
+              >
+                <Icon name="cart" size={21} />
+                <span className="hidden flex-col leading-none sm:flex">
+                  <small className="text-[.72rem] font-bold">কার্ট</small>
+                  <strong className="text-[.9rem]">{cartCount} টি</strong>
+                </span>
+                {cartCount > 0 && <span className="badge badge--orange sm:hidden">{cartCount}</span>}
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* ── Primary navigation ── */}
-        <nav className="bg-green700 text-[#FFF8EC] border-b border-[rgba(255,248,236,.12)] py-4" aria-label="প্রধান নেভিগেশন">
-          <div className="max-w-max mx-auto px-4 md:px-5 flex items-center justify-between gap-4 py-1">
-            <ul className="hidden lg:flex gap-1 flex-wrap">
-              {PRIMARY_NAV.map((item) => (
-                <li key={item.to}>
-                  <NavLink
-                    to={item.to}
-                    end={item.end}
-                    className={({ isActive }) => {
-                      const active = item.to.includes('?')
-                        ? location.search.includes(item.to.split('?')[1])
-                        : isActive
-                      return `inline-flex items-center gap-1 px-2 py-1 rounded-full font-bold opacity-90 hover:opacity-100 hover:bg-white/10 transition-colors ${active ? 'bg-[rgba(213,243,106,0.16)] text-lime opacity-100' : ''}`
-                    }}
-                  >
+        {/* ── Tablet strip (768–1023px) ── */}
+        <nav
+          data-audit="tablet-nav"
+          aria-label="দ্রুত নেভিগেশন"
+          className="hidden border-b border-[#FFF8EC]/10 bg-green700/40 md:block lg:hidden"
+        >
+          <div className="container">
+            <ul className="flex items-center gap-1 overflow-x-auto py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {TABLET_NAV.map((item) => (
+                <li key={item.to} className="shrink-0">
+                  <NavLink to={item.to} end={item.end} className={navLinkClass(isActive(item))}>
                     {item.label}
                   </NavLink>
                 </li>
               ))}
             </ul>
-            <div className="hidden lg:flex items-center gap-1.5 opacity-90 text-[0.98rem]">
+          </div>
+        </nav>
+
+        {/* ── Desktop navigation (≥1024px) ── */}
+        <nav
+          data-audit="desktop-nav"
+          aria-label="প্রধান নেভিগেশন"
+          className="hidden border-b border-[#FFF8EC]/10 lg:block"
+        >
+          <div className="container flex items-center justify-between gap-4">
+            <ul className="flex flex-wrap items-center gap-0.5 py-1.5">
+              {PRIMARY_NAV.map((item) => (
+                <li key={item.to} className={item.wide ? 'hidden xl:block' : ''}>
+                  <NavLink to={item.to} end={item.end} className={navLinkClass(isActive(item))}>
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+            <div className="hidden shrink-0 items-center gap-1.5 text-[.95rem] text-[#FFF8EC]/90 xl:flex">
               <Icon name="user" size={15} />
               <span>{brand.ownerLabelBn}</span>
             </div>
@@ -184,12 +234,29 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* ── Mobile drawer ── */}
-      <div className={`fixed inset-0 z-[950] pointer-events-none max-w-full ${menuOpen ? 'pointer-events-auto' : ''}`} id="mobile-drawer" aria-hidden={!menuOpen}>
-        <div className={`absolute inset-0 bg-[rgba(6,47,40,0.4)] transition-opacity duration-200 ease-out ${menuOpen ? 'opacity-100' : 'opacity-0'}`} onClick={closeMenu} />
-        <aside className={`absolute top-0 bottom-0 left-0 w-[min(86vw,360px)] max-w-full bg-gradient-to-b from-green700 to-[#05251F] text-[#FFF8EC] flex flex-col transition-transform duration-[250ms] ease-out overflow-y-auto overscroll-contain ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`} ref={drawerRef} role="dialog" aria-modal="true" aria-label="মেনু">
+      {/* ── Mobile / tablet drawer (below 1024px) ── */}
+      <div
+        className={`fixed inset-0 z-[950] max-w-full ${menuOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
+        id="mobile-drawer"
+        aria-hidden={!menuOpen}
+      >
+        <div
+          className={`absolute inset-0 bg-[#062f28]/45 transition-opacity duration-200 ease-out ${
+            menuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={closeMenu}
+        />
+        <aside
+          ref={drawerRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="মেনু"
+          className={`absolute inset-y-0 left-0 flex w-[min(86vw,360px)] max-w-full flex-col overflow-y-auto overscroll-contain bg-gradient-to-b from-green700 to-[#05251F] text-[#FFF8EC] transition-transform duration-200 ease-out ${
+            menuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
           <div className="flex items-center justify-between px-3 py-2.5">
-            <Logo variant="dark" size={40} />
+            <Logo variant="dark" size={38} />
             <button type="button" className="icon-btn" onClick={closeMenu} aria-label="মেনু বন্ধ করুন">
               <Icon name="close" size={22} />
             </button>
@@ -197,7 +264,7 @@ export default function Header() {
 
           <button
             type="button"
-            className="mx-3 mb-2 flex items-center gap-2 px-3 py-2 rounded-full bg-white/15 border border-[rgba(255,248,236,.24)]"
+            className="mx-3 mb-3 flex items-center gap-2 rounded-full border border-[#FFF8EC]/25 bg-white/10 px-3.5 py-2.5 text-left text-sm transition-colors hover:bg-white/20"
             onClick={() => {
               closeMenu()
               setSearchOpen(true)
@@ -206,18 +273,24 @@ export default function Header() {
             <Icon name="search" size={18} /> পণ্য খুঁজুন…
           </button>
 
-          <div className="flex-1 overflow-auto px-3 flex flex-col gap-4">
+          <div className="flex flex-1 flex-col gap-5 px-3 pb-2">
             {DRAWER_GROUPS.map((group) => (
-              <div className="flex flex-col gap-2" key={group.title}>
-                <h3>{group.title}</h3>
-                <ul>
+              <div key={group.title}>
+                <h3 className="mb-1.5 text-[.95rem] font-bold uppercase tracking-wide text-[#FFF8EC]/65">
+                  {group.title}
+                </h3>
+                <ul className="flex flex-col gap-0.5">
                   {group.links.map((l) => (
                     <li key={l.to}>
                       <NavLink
                         to={l.to}
                         end={l.end}
-                        className={({ isActive }) => `flex items-center justify-between px-2 py-2 rounded-md ${isActive ? 'bg-[rgba(213,243,106,0.16)] text-lime' : ''}`}
                         onClick={closeMenu}
+                        className={({ isActive: a }) =>
+                          `flex items-center justify-between rounded-sm px-2.5 py-2.5 font-semibold transition-colors ${
+                            isActive(l) || a ? 'bg-lime/15 text-lime' : 'hover:bg-white/10'
+                          }`
+                        }
                       >
                         {l.label}
                         <Icon name="chevronRight" size={16} />
@@ -228,37 +301,40 @@ export default function Header() {
               </div>
             ))}
 
-            <div className="drawer__group">
-              <h3>অতিরিক্ত</h3>
-              <ul>
-                <li>
-                  <NavLink to="/faq" className="flex items-center justify-between px-2 py-2 rounded-md" onClick={closeMenu}>
-                    সাধারণ জিজ্ঞাসা <Icon name="chevronRight" size={16} />
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/wishlist" className="drawer__link" onClick={closeMenu}>
-                    উইশলিস্ট <Icon name="chevronRight" size={16} />
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/shipping-policy" className="drawer__link" onClick={closeMenu}>
-                    নীতিমালা <Icon name="chevronRight" size={16} />
-                  </NavLink>
-                </li>
+            <div>
+              <h3 className="mb-1.5 text-[.95rem] font-bold uppercase tracking-wide text-[#FFF8EC]/65">
+                অতিরিক্ত
+              </h3>
+              <ul className="flex flex-col gap-0.5">
+                {[
+                  { to: '/faq', label: 'সাধারণ জিজ্ঞাসা' },
+                  { to: '/wishlist', label: 'উইশলিস্ট' },
+                  { to: '/shipping-policy', label: 'নীতিমালা' },
+                ].map((l) => (
+                  <li key={l.to}>
+                    <NavLink
+                      to={l.to}
+                      onClick={closeMenu}
+                      className="flex items-center justify-between rounded-sm px-2.5 py-2.5 font-semibold transition-colors hover:bg-white/10"
+                    >
+                      {l.label}
+                      <Icon name="chevronRight" size={16} />
+                    </NavLink>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
-          <div className="p-3 flex flex-col gap-1.5 opacity-90">
-            <a href={contactLinks.tel} onClick={closeMenu}>
+          <div className="flex flex-col gap-2.5 p-3 text-sm text-[#FFF8EC]/90">
+            <a href={contactLinks.tel} onClick={closeMenu} className="flex items-center gap-2">
               <Icon name="phone" size={16} /> {brand.phoneDisplay}
             </a>
-            <a href={contactLinks.mail} onClick={closeMenu}>
+            <a href={contactLinks.mail} onClick={closeMenu} className="flex items-center gap-2">
               <Icon name="mail" size={16} /> {brand.email}
             </a>
-            <p>
-              <Icon name="location" size={16} /> {brand.addressBn}
+            <p className="flex items-start gap-2 text-[#FFF8EC]/90">
+              <Icon name="location" size={16} /> <span>{brand.addressBn}</span>
             </p>
           </div>
         </aside>

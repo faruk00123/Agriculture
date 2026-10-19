@@ -1,0 +1,13 @@
+# Dependencies and build output are installed/built by Vercel itself.
+node_modules/
+dist/
+dist-ssr/
+
+# Local-only docs, audit harness and logs never shipped to production.
+docs/
+scripts/
+*.log
+npm-debug.log*
+
+# Vercel metadata
+.vercel/

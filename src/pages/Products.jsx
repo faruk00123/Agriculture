@@ -107,12 +107,12 @@ export default function Products() {
       />
 
       <section className="section section--tight">
-        <div className="container catalog">
+        <div className="container">
           {/* ── Toolbar ── */}
-          <div className="flex flex-wrap items-center gap-2 justify-between bg-white border border-border rounded-lg p-2 shadow-sm">
+          <div className="catalog__bar">
             <button
               type="button"
-              className="btn btn--ghost btn--sm catalog__filterBtn"
+              className="btn btn--ghost btn--sm relative lg:hidden"
               aria-expanded={panelOpen}
               aria-controls="filter-panel"
               onClick={() => setPanelOpen((v) => !v)}
@@ -150,11 +150,11 @@ export default function Products() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4 mt-4">
+          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[280px_1fr]">
             {/* ── Filters ── */}
             <aside
               id="filter-panel"
-              className={`filters${panelOpen ? ' is-open' : ''}`}
+              className={`filters h-fit${panelOpen ? ' is-open' : ''} lg:sticky lg:top-4`}
               aria-label="পণ্য ফিল্টার"
             >
               <form
@@ -165,10 +165,13 @@ export default function Products() {
                   term ? setParam('q', term) : setParam('q', '')
                 }}
               >
-                <div className="flex justify-between items-center">
-                  <h2>
+                <div className="flex items-center justify-between gap-2">
+                  <h2 className="flex items-center gap-1.5 text-[1.05rem]">
                     <Icon name="filter" size={17} /> ফিল্টার
                   </h2>
+                  <button type="button" className="link-btn lg:hidden" onClick={() => setPanelOpen(false)}>
+                    বন্ধ করুন
+                  </button>
                   {activeCount > 0 && (
                     <button type="button" className="link-btn" onClick={clearAll}>
                       মুছুন
@@ -188,7 +191,7 @@ export default function Products() {
                       onChange={(e) => setSearchText(e.target.value)}
                       placeholder="যেমন: সার, স্প্রেয়ার…"
                     />
-                    <button type="submit" className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-sm bg-green500 text-white hover:bg-green600 transition-colors">
+                    <button type="submit" className="btn btn--green btn--sm shrink-0">
                       খুঁজুন
                     </button>
                   </div>
@@ -198,13 +201,17 @@ export default function Products() {
                   <label className="filter-label" htmlFor="f-cat">
                     ক্যাটাগরি
                   </label>
-                  <select id="f-cat" value={cat} onChange={(e) => {
-                    const v = e.target.value
-                    const next = new URLSearchParams(params)
-                    v ? next.set('cat', v) : next.delete('cat')
-                    next.delete('sub')
-                    setParams(next, { replace: true })
-                  }}>
+                  <select
+                    id="f-cat"
+                    value={cat}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      const next = new URLSearchParams(params)
+                      v ? next.set('cat', v) : next.delete('cat')
+                      next.delete('sub')
+                      setParams(next, { replace: true })
+                    }}
+                  >
                     <option value="">সব ক্যাটাগরি</option>
                     {mainCategories.map((c) => (
                       <optgroup key={c.slug} label={c.titleBn}>
@@ -311,14 +318,14 @@ export default function Products() {
                   </select>
                 </div>
 
-                <button type="button" className="btn btn--ghost btn--sm filters__clear" onClick={clearAll}>
+                <button type="button" className="btn btn--ghost btn--sm" onClick={clearAll}>
                   সব ফিল্টার মুছুন
                 </button>
               </form>
             </aside>
 
             {/* ── Results ── */}
-            <div className="flex flex-col gap-4">
+            <div className="flex min-w-0 flex-col gap-4">
               {list.length === 0 ? (
                 <EmptyState
                   icon="search"
@@ -331,7 +338,7 @@ export default function Products() {
                   }
                 />
               ) : (
-                <div className="pgrid pgrid--3">
+                <div className="product-grid product-grid--3">
                   {list.map((p) => (
                     <ProductCard key={p.id} product={p} />
                   ))}

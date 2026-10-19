@@ -36,7 +36,7 @@ export default function Contact() {
       />
 
       <section className="section section--tight">
-        <div className="container contact">
+        <div className="container">
           <div className="contact__grid">
             {/* Info */}
             <aside className="contact__info">

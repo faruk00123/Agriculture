@@ -13,6 +13,10 @@ const TAG_LABEL = {
   popular: 'জনপ্রিয়',
 }
 
+/**
+ * Product card — fixed image ratio, clamped title and a bottom-aligned
+ * action row so every card in a grid lines up on every breakpoint.
+ */
 export default function ProductCard({ product }) {
   const { addItem, toggleWishlist, inWishlist } = useShop()
   const cat = getCategory(product.category)
@@ -22,20 +26,26 @@ export default function ProductCard({ product }) {
   const showTag = product.tags.find((t) => t === 'new' || t === 'sale')
 
   return (
-    <article className={`flex flex-col bg-white border border-border rounded-lg shadow-sm overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md tone-${product.tone}`}>
-      <div className="relative aspect-[4/3] grid place-items-center p-2.5 overflow-hidden">
-        <Link to={`/product/${product.id}`} className="w-full h-full grid place-items-center" aria-label={`${product.name} — বিস্তারিত`}>
+    <article className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-white shadow-sm transition duration-150 hover:-translate-y-0.5 hover:shadow-md">
+      <div className={`relative aspect-[4/3] overflow-hidden p-3 tone-${product.tone}`}>
+        <Link
+          to={`/product/${product.id}`}
+          className="grid h-full w-full place-items-center"
+          aria-label={`${product.name} — বিস্তারিত`}
+        >
           <ProductArt type={product.art} imageUrl={product.imageUrl} alt={product.name} />
         </Link>
 
-        <div className="absolute top-2 left-2 flex flex-col gap-1.5">
+        <div className="absolute left-2 top-2 flex flex-col items-start gap-1.5">
           {showTag && <span className={`flag flag--${showTag}`}>{TAG_LABEL[showTag]}</span>}
           <DemoBadge small />
         </div>
 
         <button
           type="button"
-          className={`pcard__wish${wished ? ' is-on' : ''}`}
+          className={`absolute right-2 top-2 grid h-9 w-9 place-items-center rounded-full border border-ink/10 bg-white/95 text-ink shadow-sm transition-colors hover:bg-white ${
+            wished ? 'text-[#FF4D4D]' : ''
+          }`}
           onClick={() => toggleWishlist(product.id)}
           aria-pressed={wished}
           aria-label={wished ? `${product.name} উইশলিস্ট থেকে সরান` : `${product.name} উইশলিস্টে যোগ করুন`}
@@ -44,46 +54,48 @@ export default function ProductCard({ product }) {
         </button>
       </div>
 
-      <div className="p-3 md:p-4 flex flex-col gap-1.5">
-        <div className="flex justify-between text-sm text-ink-soft">
-          <span className="pcard__brand">{product.brand}</span>
-          <span className="pcard__cat">{sub?.titleBn || cat?.titleBn}</span>
+      <div className="flex flex-1 flex-col gap-2 p-3 sm:p-4">
+        <div className="flex items-start justify-between gap-2 text-xs text-ink-soft">
+          <span className="truncate font-semibold">{product.brand}</span>
+          <span className="shrink-0 text-right">{sub?.titleBn || cat?.titleBn}</span>
         </div>
 
-        <h3 className="text-base md:text-lg leading-tight break-words">
-          <Link to={`/product/${product.id}`}>{product.name}</Link>
+        <h3 className="line-clamp-2 text-[1.02rem] leading-snug">
+          <Link to={`/product/${product.id}`} className="hover:text-green600">
+            {product.name}
+          </Link>
         </h3>
 
-        <div className="flex justify-between flex-wrap gap-1 text-sm text-ink-soft">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm text-ink-soft">
           {product.pack && <span>প্যাক: {product.pack}</span>}
           <span className="flex items-center gap-1" title={`ডেমো রেটিং ${product.rating} (রিভিউ ${product.reviews})`}>
-            <Icon name="star" size={13} className="star" />
+            <Icon name="star" size={14} className="star" />
             {product.rating.toFixed(1)}
-            <em>({product.reviews})</em>
+            <em className="not-italic">({product.reviews})</em>
           </span>
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="flex items-baseline gap-2">
-            <strong>{formatPrice(product.price)}</strong>
-            {product.oldPrice && <del>{formatPrice(product.oldPrice)}</del>}
-          </div>
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+          <p className="flex items-baseline gap-2">
+            <strong className="text-[1.15rem] text-ink">{formatPrice(product.price)}</strong>
+            {product.oldPrice && <del className="text-sm text-ink-soft">{formatPrice(product.oldPrice)}</del>}
+          </p>
           <StockChip stock={product.stock} />
         </div>
 
-        <div className="flex justify-between gap-2 mt-0.5 flex-wrap">
-          <Link to={`/product/${product.id}`} className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-sm bg-[#1f29370f] text-ink hover:bg-[#1f29371a] transition-colors">
+        <div className="mt-auto grid grid-cols-2 gap-2 pt-2">
+          <Link to={`/product/${product.id}`} className="btn btn--ghost btn--sm">
             বিস্তারিত
           </Link>
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-sm bg-gradient-to-b from-orange to-orange2 text-[#1F2937] shadow-sm hover:brightness-[1.02] transition-colors disabled:opacity-50"
+            className="btn btn--orange btn--sm"
             onClick={() => addItem(product.id, 1)}
             disabled={out}
             aria-label={out ? `${product.name} — স্টক শেষ` : `${product.name} কার্টে যোগ করুন`}
           >
             <Icon name="cart" size={16} />
-            {out ? 'স্টক শেষ' : 'কার্টে'}
+            {out ? 'শেষ' : 'কার্টে'}
           </button>
         </div>
       </div>

@@ -68,24 +68,26 @@ export default function ProductDetails() {
     <>
       {/* ── Breadcrumbs ── */}
       <div className="crumbBar">
-        <div className="container crumbs" aria-label="ব্রেডক্রাম্ব">
-          <Link to="/">হোম</Link>
-          <span>
-            <Icon name="chevronRight" size={13} />
-            <Link to="/products">সকল পণ্য</Link>
-          </span>
-          <span>
-            <Icon name="chevronRight" size={13} />
-            <Link to={`/products?cat=${product.category}`}>{cat?.titleBn}</Link>
-          </span>
-          <span>
-            <Icon name="chevronRight" size={13} />
-            <Link to={`/products?cat=${product.category}&sub=${product.subcategory}`}>{sub?.titleBn}</Link>
-          </span>
-          <span>
-            <Icon name="chevronRight" size={13} />
-            <em>{product.name}</em>
-          </span>
+        <div className="container">
+          <nav className="crumbs" aria-label="ব্রেডক্রাম্ব">
+            <Link to="/">হোম</Link>
+            <span>
+              <Icon name="chevronRight" size={13} />
+              <Link to="/products">সকল পণ্য</Link>
+            </span>
+            <span>
+              <Icon name="chevronRight" size={13} />
+              <Link to={`/products?cat=${product.category}`}>{cat?.titleBn}</Link>
+            </span>
+            <span>
+              <Icon name="chevronRight" size={13} />
+              <Link to={`/products?cat=${product.category}&sub=${product.subcategory}`}>{sub?.titleBn}</Link>
+            </span>
+            <span>
+              <Icon name="chevronRight" size={13} />
+              <em>{product.name}</em>
+            </span>
+          </nav>
         </div>
       </div>
 
@@ -116,45 +118,45 @@ export default function ProductDetails() {
           </div>
 
           {/* ── Summary ── */}
-          <div className="flex flex-col gap-3 bg-white border border-border rounded-xl p-4 md:p-5 shadow-sm">
+          <div className="flex flex-col gap-3 rounded-xl border border-border bg-white p-4 shadow-sm sm:p-5">
             <div className="flex flex-wrap gap-1.5">
               <span className="chip chip--mint">{sub?.titleBn}</span>
               <span className="chip">{product.brand}</span>
               <DemoBadge small />
             </div>
 
-            <h1 className="text-2xl md:text-3xl font-bold">{product.name}</h1>
+            <h1 className="text-2xl font-bold sm:text-3xl">{product.name}</h1>
 
-            <div className="flex justify-between items-center flex-wrap gap-2">
-              <span className="stars" title={`ডেমো রেটিং ${product.rating}`}>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="flex items-center gap-1.5" title={`ডেমো রেটিং ${product.rating}`}>
                 {[1, 2, 3, 4, 5].map((n) => (
                   <Icon
                     key={n}
-                    name={n <= Math.round(product.rating) ? 'star' : 'star'}
+                    name="star"
                     size={16}
                     className={`star${n <= Math.round(product.rating) ? '' : ' star--off'}`}
                   />
                 ))}
-                <em>
+                <em className="not-italic text-ink-soft">
                   {product.rating.toFixed(1)} · ডেমো রিভিউ {product.reviews}টি
                 </em>
               </span>
               <StockChip stock={product.stock} />
             </div>
 
-            <div className="flex items-baseline gap-3">
-              <div className="price price--lg">
-                <strong>{formatPrice(product.price)}</strong>
-                {product.oldPrice && <del>{formatPrice(product.oldPrice)}</del>}
-              </div>
+            <div className="flex flex-wrap items-baseline gap-3">
+              <p className="flex items-baseline gap-2">
+                <strong className="text-[clamp(1.8rem,5vw,2.4rem)] text-ink">{formatPrice(product.price)}</strong>
+                {product.oldPrice && <del className="text-ink-soft">{formatPrice(product.oldPrice)}</del>}
+              </p>
               {product.oldPrice && (
-                <span className="text-green600 font-extrabold">
+                <span className="font-extrabold text-green600">
                   ডেমো সাশ্রয় {formatPrice(product.oldPrice - product.price)}
                 </span>
               )}
             </div>
 
-            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <dl className="pdp__quick">
               <div>
                 <dt>ব্র্যান্ড</dt>
                 <dd>{product.brand}</dd>
@@ -173,13 +175,13 @@ export default function ProductDetails() {
               </div>
             </dl>
 
-            <p className="pdp__short">{product.short}</p>
+            <p className="text-ink">{product.short}</p>
 
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-wrap items-center gap-2">
               <QtyStepper value={qty} onChange={setQty} />
               <button
                 type="button"
-                className="flex-1 min-w-[220px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold bg-gradient-to-b from-orange to-orange2 text-[#1F2937] shadow-sm hover:brightness-[1.02] hover:shadow-md transition-all active:translate-y-px"
+                className="btn btn--orange btn--lg min-w-[200px] flex-1"
                 onClick={addToCart}
                 disabled={out}
               >
@@ -191,7 +193,7 @@ export default function ProductDetails() {
               </button>
               <button
                 type="button"
-                className={`icon-btn pdp__wish${wished ? ' is-on' : ''}`}
+                className={`icon-btn icon-btn--light h-11 w-11 ${wished ? 'is-on' : ''}`}
                 onClick={() => toggleWishlist(product.id)}
                 aria-pressed={wished}
                 aria-label={wished ? 'উইশলিস্ট থেকে সরান' : 'উইশলিস্টে যোগ করুন'}
@@ -226,7 +228,7 @@ export default function ProductDetails() {
       {/* ── Description ── */}
       <section className="section section--tight">
         <div className="container pdp__details">
-          <div className="flex flex-col gap-4 bg-white border border-border rounded-xl p-4 md:p-5 shadow-sm">
+          <div className="panel">
             <h2>পণ্যের বর্ণনা</h2>
             <p>{product.description}</p>
             <p>
@@ -246,7 +248,7 @@ export default function ProductDetails() {
             <p>{product.short}</p>
           </div>
 
-          <aside className="flex flex-col gap-3 bg-white border border-border rounded-xl p-4 md:p-5 shadow-sm h-fit">
+          <aside className="panel h-fit">
             <h2>পণ্য তথ্য</h2>
             <table className="infoTable">
               <tbody>
@@ -307,7 +309,7 @@ export default function ProductDetails() {
         <section className="section section--tint">
           <div className="container">
             <SectionHeading kicker="সম্পর্কিত" title="একই ক্যাটাগরির পণ্য" />
-            <div className="pgrid pgrid--4">
+            <div className="product-grid product-grid--4">
               {related.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}

@@ -76,7 +76,12 @@ export default function SearchOverlay({ open, onClose }) {
           <button type="submit" className="btn btn--orange btn--sm">
             অনুসন্ধান
           </button>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="অনুসন্ধান বন্ধ করুন">
+          <button
+            type="button"
+            className="icon-btn icon-btn--light"
+            onClick={onClose}
+            aria-label="অনুসন্ধান বন্ধ করুন"
+          >
             <Icon name="close" size={20} />
           </button>
         </form>

@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
+import { brand } from '../config/brand'
 import { articles, getArticle } from '../data/content'
 import { PageHero, EmptyState, Note, SectionHeading } from '../components/UI'
 import Icon from '../components/Icon'

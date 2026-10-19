@@ -16,7 +16,7 @@ export default function Advice() {
       <section className="section section--tight">
         <div className="container">
           <SectionHeading kicker="নিবন্ধ" title="সর্বশেষ কৃষি তথ্য" />
-          <div className="art-grid art-grid--3">
+          <div className="art-grid">
             {articles.map((a) => (
               <Link key={a.slug} to={`/advice/${a.slug}`} className={`art-card tone-${a.tone}`}>
                 <span className="art-card__cover">

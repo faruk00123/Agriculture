@@ -17,7 +17,7 @@ export function LogoMark({ size = 44, variant = 'light', className = '' }) {
       width={size}
       height={size}
       viewBox="0 0 64 64"
-      className={`logo-mark ${className}`}
+      className={`h-auto w-auto shrink-0 ${className}`}
       role="img"
       aria-label={`${brand.name} logo`}
     >
@@ -36,14 +36,32 @@ export function LogoMark({ size = 44, variant = 'light', className = '' }) {
  * Horizontal logo: mark + Bengali wordmark + English wordmark.
  * The owner's name is deliberately NOT part of the wordmark.
  */
-export default function Logo({ variant = 'light', size = 44, showEnglish = true, className = '', to = '/' }) {
-  const ink = variant === 'dark' ? 'logo--dark' : 'logo--light'
+export default function Logo({
+  variant = 'light',
+  size = 44,
+  showEnglish = true,
+  className = '',
+  englishClass = '',
+  to = '/',
+}) {
   return (
-    <Link to={to} className={`logo ${ink} ${className}`} aria-label={`${brand.nameBn} — হোম`}>
+    <Link
+      to={to}
+      className={`flex shrink-0 items-center gap-2 ${variant === 'dark' ? 'text-[#FFF8EC]' : 'text-green700'} ${className}`}
+      aria-label={`${brand.nameBn} — হোম`}
+    >
       <LogoMark size={size} variant={variant} />
-      <span className="logo__text">
-        <span className="logo__bn">{brand.nameBn}</span>
-        {showEnglish && <span className="logo__en">{brand.name}</span>}
+      <span className="flex min-w-0 flex-col leading-[.95]">
+        <span className="truncate text-[clamp(1.05rem,1.6vw,1.25rem)] font-extrabold tracking-tight">
+          {brand.nameBn}
+        </span>
+        {showEnglish && (
+          <span
+            className={`hidden font-manrope text-[.7rem] font-extrabold uppercase tracking-[.24em] opacity-90 sm:text-[.8rem] ${englishClass}`}
+          >
+            {brand.name}
+          </span>
+        )}
       </span>
     </Link>
   )

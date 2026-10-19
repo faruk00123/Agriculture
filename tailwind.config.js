@@ -1,10 +1,48 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
+  /* Classes composed at runtime (e.g. `tone-${product.tone}`) can't be seen
+     by the scanner, so the finite sets are safelisted explicitly. */
+  safelist: [
+    'tone-mint',
+    'tone-sky',
+    'tone-harvest',
+    'tone-lavender',
+    'tone-peach',
+    'tone-coral',
+    'flag--new',
+    'flag--sale',
+    'flag--popular',
+    'flag--featured',
+    'badge--orange',
+    'badge--lime',
+    'chip--mint',
+    'chip--clear',
+    'stock--in',
+    'stock--low',
+    'stock--out',
+    'note--harvest',
+    'note--mint',
+    'note--coral',
+    'note--sky',
   ],
   theme: {
+    /* Centred page container: max 1180px content width, fluid gutters.
+       320px → padded full width · ≥1280px → 1180px cap. */
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm: '1.5rem',
+        lg: '2rem',
+      },
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1180px',
+      },
+    },
     extend: {
       colors: {
         bg: '#FFF8EC',
@@ -38,20 +76,25 @@ export default {
         manrope: ['Manrope', 'sans-serif'],
       },
       borderRadius: {
-        'xs': '8px',
-        'sm': '10px',
-        'md': '14px',
-        'lg': '18px',
-        'xl': '24px',
+        xs: '8px',
+        sm: '10px',
+        md: '14px',
+        lg: '18px',
+        xl: '24px',
         '2xl': '32px',
       },
       boxShadow: {
-        'sm': '0 6px 20px rgba(6, 47, 40, .06)',
-        'md': '0 12px 40px rgba(6, 47, 40, .08)',
-        'lg': '0 20px 60px rgba(6, 47, 40, .1)',
+        sm: '0 6px 20px rgba(6, 47, 40, .06)',
+        md: '0 12px 40px rgba(6, 47, 40, .08)',
+        lg: '0 20px 60px rgba(6, 47, 40, .1)',
       },
       maxWidth: {
-        'max': '1180px',
+        max: '1180px',
+      },
+      /* Extra small / large-desktop steps used by the responsive layouts */
+      screens: {
+        xs: '400px',
+        '3xl': '1600px',
       },
     },
   },

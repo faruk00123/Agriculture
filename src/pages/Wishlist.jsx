@@ -30,12 +30,12 @@ export default function Wishlist() {
             />
           ) : (
             <>
-              <div className="pgrid pgrid--3">
+              <div className="product-grid product-grid--3">
                 {wishlistProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>
-              <p className="wishlist__foot">মোট {wishlistCount}টি পণ্য আপনার উইশলিস্টে আছে।</p>
+              <p className="mt-4 text-center text-ink-soft">মোট {wishlistCount}টি পণ্য আপনার উইশলিস্টে আছে।</p>
             </>
           )}
         </div>

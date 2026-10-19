@@ -1,9 +1,160 @@
+/**
+ * ────────────────────────────────────────────────────────────────
+ *  GLOBAL STYLESHEET — Tailwind CSS v3 (see tailwind.config.js)
+ * ────────────────────────────────────────────────────────────────
+ *  Everything visual lives in Tailwind:
+ *    • design tokens + base element styles  →  @layer base
+ *    • shared reusable components           →  src/styles/components.css
+ *    • page/section layouts                 →  utility classes in JSX
+ *
+ *  The previous `tokens.css` / `header.css` / `footer.css` / `home.css` /
+ *  `product.css` / `pages.css` / `mobile-fixes.css` / `base.css` files are
+ *  gone: their rules were migrated here, into components.css or into the
+ *  JSX markup, and their responsiveness was rebuilt on Tailwind breakpoints.
+ * ────────────────────────────────────────────────────────────────
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  /* ── Brand design tokens (mirrors tailwind.config.js theme) ── */
+  :root {
+    /* surfaces */
+    --bg: #fff8ec;
+    --bg-2: #eaf6e8;
+    --bg-tint: #fffbf2;
+    --bg-dark: #062f28;
+    --panel: #ffffff;
+    /* text */
+    --ink: #1f2937;
+    --ink-soft: #687280;
+    --border: #e5e7eb;
+    /* greens */
+    --green-700: #083d32;
+    --green-600: #0b5d45;
+    --green-500: #168e5a;
+    --lime: #d5f36a;
+    --mint: #eaf6e8;
+    /* accents */
+    --orange: #ff9f1c;
+    --orange-2: #ff7a18;
+    --gold: #fff5d9;
+    --sky: #e8f5fb;
+    --lavender: #f2eafe;
+    --peach: #fff0e2;
+    --coral: #fce8e5;
+    --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* sticky header offsets used by scroll-margin on anchors */
+    --header-h: 7rem;
+  }
+
   html {
-    scroll-behavior: smooth;
+    @apply scroll-smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bg font-siliguri text-ink antialiased;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold text-ink;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  h1 {
+    @apply text-[clamp(1.95rem,5.4vw,3.05rem)] leading-[1.1];
+  }
+  h2 {
+    @apply text-[clamp(1.35rem,3.4vw,1.95rem)];
+  }
+  h3 {
+    @apply text-[clamp(1.05rem,2.1vw,1.2rem)];
+  }
+
+  p {
+    @apply text-ink-soft;
+  }
+
+  /* Bengali text needs a slightly taller default line-height for legibility */
+  li,
+  dd,
+  dt,
+  td,
+  th {
+    line-height: 1.6;
+  }
+
+  /* Visible keyboard focus for every interactive element (a11y) */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid rgba(22, 142, 90, 0.55);
+    outline-offset: 2px;
+  }
+  :where(a, button, summary):focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Form controls — one consistent, accessible style everywhere */
+  input,
+  select,
+  textarea {
+    @apply w-full rounded-sm border border-border bg-white px-3 py-2 text-ink transition duration-150;
+    @apply placeholder:text-ink-soft/70;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    @apply border-green500 outline-none ring-2 ring-green500/20;
+  }
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
+    @apply cursor-not-allowed bg-bg3 text-ink-soft;
+  }
+  textarea {
+    @apply resize-y;
+  }
+
+  /* Custom select chevron (replaces the deleted product.css rule) */
+  select {
+    @apply cursor-pointer appearance-none pr-9;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23687280' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9.5 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.65rem center;
+    background-size: 1rem 1rem;
+  }
+
+  /* Hide number-input spinners (quantity fields) */
+  .no-spin::-webkit-outer-spin-button,
+  .no-spin::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .no-spin {
+    -moz-appearance: textfield;
+  }
+
+  ::selection {
+    background: var(--lime);
+    color: var(--green-700);
+  }
+
+  /* Respect reduced-motion for every animation/transition we ship */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
