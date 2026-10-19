@@ -11,8 +11,16 @@
  *  `product.css` / `pages.css` / `mobile-fixes.css` / `base.css` files are
  *  gone: their rules were migrated here, into components.css or into the
  *  JSX markup, and their responsiveness was rebuilt on Tailwind breakpoints.
+ *
+ *  components.css is @import-ed here (not by main.jsx) so that Tailwind
+ *  processes base + components + utilities in ONE pass and emits the layers
+ *  in the correct order.  Importing it separately made the components layer
+ *  land AFTER the utilities, so utilities such as `lg:hidden` lost to
+ *  component classes such as `.icon-btn`.
  * ────────────────────────────────────────────────────────────────
  */
+
+@import './components.css';
 
 @tailwind base;
 @tailwind components;

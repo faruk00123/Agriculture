@@ -51,13 +51,15 @@ export default function Logo({
       aria-label={`${brand.nameBn} — হোম`}
     >
       <LogoMark size={size} variant={variant} />
-      <span className="flex min-w-0 flex-col leading-[.95]">
-        <span className="truncate text-[clamp(1.05rem,1.6vw,1.25rem)] font-extrabold tracking-tight">
+      <span className="flex min-w-0 flex-col">
+        {/* Bengali script needs a line-height above 1 or the matras/reph get
+            clipped by the tight flex row — do not add `truncate` here. */}
+        <span className="text-[clamp(1.05rem,1.6vw,1.25rem)] font-extrabold leading-tight tracking-tight">
           {brand.nameBn}
         </span>
         {showEnglish && (
           <span
-            className={`hidden font-manrope text-[.7rem] font-extrabold uppercase tracking-[.24em] opacity-90 sm:text-[.8rem] ${englishClass}`}
+            className={`hidden font-manrope text-[.7rem] font-extrabold uppercase leading-tight tracking-[.24em] opacity-90 sm:text-[.8rem] ${englishClass}`}
           >
             {brand.name}
           </span>
