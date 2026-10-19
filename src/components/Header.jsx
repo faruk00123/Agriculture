@@ -120,7 +120,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-[900] bg-gradient-to-b from-green700 to-green600 text-[#FFF8EC] ${
+        className={`sticky top-0 sm:static z-[900] bg-gradient-to-b from-green700 to-green600 text-[#FFF8EC] ${
           scrolled ? 'shadow-[0_6px_30px_rgba(6,47,40,.18)]' : ''
         }`}
       >
